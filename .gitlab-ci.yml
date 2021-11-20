@@ -1,0 +1,25 @@
+containerize_master:
+  image: docker:git
+  services:
+    - docker:dind
+  before_script:
+    - apk update
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker build -t $CI_REGISTRY_IMAGE:latest .
+    - docker push $CI_REGISTRY_IMAGE:latest
+  only:
+    - master
+
+containerize_dev:
+  image: docker:git
+  services:
+    - docker:dind
+  before_script:
+    - apk update
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker build -t $CI_REGISTRY_IMAGE:dev .
+    - docker push $CI_REGISTRY_IMAGE:dev
+  only:
+    - dev
